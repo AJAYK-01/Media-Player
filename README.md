@@ -2,6 +2,11 @@
 
 A new Flutter project.
 
+##Dependencies
+
+audioplayers: ^0.15.0
+file_picker: ^1.6.0
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
