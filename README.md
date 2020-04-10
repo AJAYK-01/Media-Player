@@ -1,6 +1,7 @@
 # media_player
 
-A new Flutter project.
+A new Flutter project.  
+A simple Audio Player with integrated CETalks Radio.
 
 ## Dependencies
 
