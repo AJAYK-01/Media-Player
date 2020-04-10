@@ -2,7 +2,7 @@
 
 A new Flutter project.
 
-##Dependencies
+## Dependencies
 
 audioplayers: ^0.15.0  
 file_picker: ^1.6.0
