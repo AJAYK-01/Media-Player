@@ -48,13 +48,12 @@ class Radio extends StatefulWidget {
 }
 
 class RadioState extends State<Radio> {
-  //AudioPlayer audioPlayer = AudioPlayer();
   btnfn()   {if (result1 == 0) play();
   else pause();
   }
   play() async {
     pause();
-    int rslt = await audioPlayer.play('https://streaming.radio.co/s8c7294f48/listen');
+    int rslt= await audioPlayer.play('https://streaming.radio.co/s8c7294f48/listen'); 
     if (rslt == 1) {
       setState(() {
         result1 = 1;
@@ -67,7 +66,7 @@ class RadioState extends State<Radio> {
     }
   }
   pause() async {
-    int rslt = await audioPlayer.pause();
+    int rslt = await audioPlayer.pause(); 
     if (rslt == 1)  {
       setState(() {
       result1 =0;
@@ -95,9 +94,11 @@ class Music extends StatefulWidget {
 }
 
 class MusicState extends State<Music> {
- // AudioPlayer audioPlayer = AudioPlayer();
   String path = 'default';
   var playpause = 0;
+  var slidervalue = 0.0;
+  var seekvalue = 0.0;
+  var musiclen = 1.0;
   btnfn()   {if (result == 0) browse();
   else stop();
   }
@@ -109,7 +110,12 @@ class MusicState extends State<Music> {
   }
   play() async {
     stop();
-    int rslt = await audioPlayer.play(path, isLocal: true);
+    int rslt = await audioPlayer.play(path, isLocal: true); 
+    audioPlayer.onDurationChanged.listen((Duration dtn) {
+          setState(() {
+            musiclen = dtn.inMilliseconds.toDouble();
+          }); 
+        });
     if (rslt == 1) {
       setState(() {
         result = 1;
@@ -118,12 +124,19 @@ class MusicState extends State<Music> {
         result1 =0;
         playback1 = "Play CETalks";
         picon1 = Icon(Icons.play_arrow);
+        
+        audioPlayer.onAudioPositionChanged.listen((Duration pos) {
+          setState(() {
+            slidervalue = pos.inMilliseconds.toDouble();
+          });
+        });
       });
+     
     }
     completion();
   }
   stop() async {
-    int rslt = await audioPlayer.stop();
+    int rslt = await audioPlayer.stop(); 
     if (rslt == 1)  {
       setState(() {
       result =0;
@@ -133,7 +146,6 @@ class MusicState extends State<Music> {
       }
    
   }
-
 
   completion() async {
     audioPlayer.onPlayerCompletion.listen((event) {
@@ -151,11 +163,21 @@ class MusicState extends State<Music> {
     return ListView(
       children: <Widget>[
          Container(
-           child: RaisedButton.icon(onPressed: btnfn, icon: picon, label: Text(playback)),
+            child: RaisedButton.icon(onPressed: btnfn, icon: picon, label: Text(playback)),
            ),
            Container(
-             child: RaisedButton.icon(onPressed: pause, icon: Icon(Icons.pause_circle_filled), label: Text("")),
+            child: RaisedButton.icon(onPressed: pause, icon: Icon(Icons.pause_circle_filled), label: Text("")),
            ),
+           Container(
+             child: musiclen != 0 ?
+             Slider(value: slidervalue, min: 0.0, max: musiclen,// divisions: musiclen.round(),
+                  onChanged: (double value) async {
+                     setState(() async {
+                       await audioPlayer.seek(Duration(milliseconds: value.round()));
+                     }); 
+                  }, 
+            ) : Container(),
+           )
       ]
     );
   }
