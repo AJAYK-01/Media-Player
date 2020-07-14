@@ -53,7 +53,7 @@ class RadioState extends State<Radio> {
   }
   play() async {
     pause();
-    int rslt= await audioPlayer.play('https://streaming.radio.co/s8c7294f48/listen'); 
+    int rslt= await audioPlayer.play('https://s4.radio.co/sa825e656c/listen'); 
     if (rslt == 1) {
       setState(() {
         result1 = 1;
